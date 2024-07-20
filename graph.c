@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 typedef char String[256];
 
@@ -64,6 +65,22 @@ bool fileToGraph(FILE* fp, graph* newGraph){
     return true;
 }
 
+bool caseInsensitiveStringCompare(String one, String two){
+    if (strlen(one) != strlen(two))
+        return false;
+    int i;
+    bool isMatching = true;
+    int len = strlen(one); //it is assumed at this point that the two strings have the same name
+
+    for (i = 0; i < len && isMatching; i++){
+        if (toupper(one[i]) != toupper(two[i])){
+            isMatching = false;
+        }
+    }
+
+    return isMatching;
+}
+
 int getDegree(vertex* node){
     vertex* temp = node->edge;
     int deg = 0;
@@ -75,6 +92,26 @@ int getDegree(vertex* node){
     return deg;
 }
 
+//key is the name of the vertex
+vertex* getVertex(graph someGraph, String key){
+    int i;
+    bool isFound = false;
+    vertex* returnVal;
+
+    for (i = 0; i < someGraph.numVertices && !isFound; i++){
+        if (strcpy(someGraph.adjacencyList[i].name, key) == 0){
+            isFound = true;
+            returnVal = &(someGraph.adjacencyList[i]);
+        }
+
+    }
+
+    if (isFound)
+        return returnVal;
+
+    else return NULL;
+}
+
 //for debugging purposes
 //traverses the linked list per vertex
 int main(){
@@ -83,7 +120,10 @@ int main(){
 
     fp = fopen("GRAPH.txt", "r");
 
-    fileToGraph(fp, &newGraph);
+    if (!fileToGraph(fp, &newGraph))
+        printf("The file does not exist.\n");
+
+    fclose(fp);
 
     int i;
 
@@ -102,7 +142,7 @@ int main(){
         printf("\n");
     }
 
-    fclose(fp);
+
 
     return 0;
 }
