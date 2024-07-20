@@ -64,6 +64,17 @@ bool fileToGraph(FILE* fp, graph* newGraph){
     return true;
 }
 
+int getDegree(vertex* node){
+    vertex* temp = node->edge;
+    int deg = 0;
+    while (temp->edge != NULL){
+        temp = temp->edge;
+        deg++;
+    }
+
+    return deg;
+}
+
 //for debugging purposes
 //traverses the linked list per vertex
 int main(){
@@ -78,13 +89,15 @@ int main(){
 
     for (i = 0; i < newGraph.numVertices; i++){
         vertex* temp = &(newGraph.adjacencyList[i]);
-        printf("Vertex %d:\n", i + 1);
+        printf("Vertex %d:", i + 1);
         while (temp->edge != NULL){
             printf("%s ", temp->name);
             temp = temp->edge;
         }
 
-        printf("%s", temp->name);
+        printf("%s\n", temp->name);
+
+        printf("Degree of vertex %d: %d\n", i + 1, getDegree(&(newGraph.adjacencyList[i])));
 
         printf("\n");
     }
