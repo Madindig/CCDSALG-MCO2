@@ -1,4 +1,4 @@
-#include "stack.c"
+#include "queue.c"
 
 void markAsVisited(graph* someGraph, String key){
     int i;
@@ -72,6 +72,34 @@ bool printDFS(graph* someGraph, String key){
     return true;
 }
 
+bool printBFS(graph* someGraph, String key){
+    vertex* currentNode = getVertex(someGraph, key);
+    int numVisited = 0;
+    QueueNode queue;
+
+    CreateQueueNode(&queue);
+
+    if (currentNode == NULL)
+        return false;
+
+    EnqueueNode(&queue, currentNode);
+    markAsVisited(someGraph, QueueTailNode(&queue)->name);
+    while (numVisited < someGraph->numVertices){
+        currentNode = DequeueNode(&queue);
+        numVisited++;
+        printf("%s ", currentNode->name);
+
+        while (getSmallestAdjacent(someGraph, currentNode->name) != NULL){
+            EnqueueNode(&queue, getSmallestAdjacent(someGraph, currentNode->name));
+            //printf("Name of Enqueued: %s\n", getSmallestAdjacent(someGraph, currentNode->name)->name);
+            //printf("Name of tail: %s\n", QueueTailNode(someGraph)->name);
+            markAsVisited(someGraph, QueueTailNode(&queue)->name);
+        }
+    }
+
+    return true;
+}
+
 /*
 int main(){
     FILE *fp = NULL;
@@ -84,8 +112,6 @@ int main(){
 
     fclose(fp);
 
-    printf("Name of node: %s\n", getSmallestAdjacent(&newGraph, "Clark")->name);
-    markAsVisited(&newGraph, "Diana");
-    printf("Name of node: %s\n", getSmallestAdjacent(&newGraph, "Clark")->name);
+    printBFS(&newGraph, "Clark");
 }*/
 

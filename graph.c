@@ -90,6 +90,18 @@ vertex* getVertex(graph* someGraph, String key){
     else return NULL;
 }
 
+void resetVisitStatus(graph* someGraph){
+    int i;
+    vertex* temp;
+    for (i = 0; i < someGraph->numVertices; i++){
+        temp = &(someGraph->adjacencyList[i]);
+        while (temp != NULL){
+            temp->hasBeenVisited = false;
+            temp = temp->edge;
+        }
+    }
+}
+
 /*
 int main(){
     FILE *fp = NULL;

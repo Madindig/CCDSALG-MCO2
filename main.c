@@ -9,22 +9,34 @@
 int main(){
     FILE *fp = NULL;
     graph newGraph;
+    int i;
 
-    fp = fopen("GRAPH.txt", "r");
+    fp = fopen("Example1.txt", "r");
 
     if (!fileToGraph(fp, &newGraph))
         printf("The file does not exist.\n");
 
     fclose(fp);
 
-    printf("DFS traversal: ");
-    printDFS(&newGraph, "Clark");
     printf("\n");
 
-    int i;
-    vertex* temp;
+    for (i = 0; i < newGraph.numVertices; i++){
+        printf("%s %d\n", newGraph.adjacencyList[i].name, getDegree(&(newGraph.adjacencyList[i])));
+    }
+
+    printf("\n");
+
+    printf("BFS traversal: ");
+    printBFS(&newGraph, "A");
+    resetVisitStatus(&newGraph);
+    printf("\n");
+    printf("\n");
+    printf("DFS traversal: ");
+    printDFS(&newGraph, "A");
 
     /*
+    vertex* temp;
+
     for (i = 0; i < newGraph.numVertices; i++){
         temp = &(newGraph.adjacencyList[i]);
         printf("Vertex %d:\n", i + 1);
