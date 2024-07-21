@@ -3,19 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <ctype.h>
-
-typedef char String[256];
-
-typedef struct vertex{
-    String name;
-    struct vertex* edge;
-    bool hasBeenVisited;
-} vertex;
-
-typedef struct graphTag{
-    int numVertices;
-    vertex adjacencyList[256];
-} graph;
+#include "graph.h"
 
 //returns a pointer to the next vertex in the list
 vertex* createVertex(vertex* node, String name){
@@ -51,7 +39,10 @@ bool fileToGraph(FILE* fp, graph* newGraph){
 
             if (strcmp(nextStr, "-1") != 0){
                 if (isNewLine){
-                    temp = createVertex(&(newGraph->adjacencyList[i]), nextStr);
+                    strcpy(newGraph->adjacencyList[i].name, nextStr);
+                    newGraph->adjacencyList[i].hasBeenVisited = false;
+                    newGraph->adjacencyList[i].edge = NULL;
+                    temp = &(newGraph->adjacencyList[i]);
                     isNewLine = false;
                 }
 
@@ -65,24 +56,8 @@ bool fileToGraph(FILE* fp, graph* newGraph){
     return true;
 }
 
-bool caseInsensitiveStringCompare(String one, String two){
-    if (strlen(one) != strlen(two))
-        return false;
-    int i;
-    bool isMatching = true;
-    int len = strlen(one); //it is assumed at this point that the two strings have the same name
-
-    for (i = 0; i < len && isMatching; i++){
-        if (toupper(one[i]) != toupper(two[i])){
-            isMatching = false;
-        }
-    }
-
-    return isMatching;
-}
-
 int getDegree(vertex* node){
-    vertex* temp = node->edge;
+    vertex* temp = node;
     int deg = 0;
     while (temp->edge != NULL){
         temp = temp->edge;
@@ -93,17 +68,20 @@ int getDegree(vertex* node){
 }
 
 //key is the name of the vertex
-vertex* getVertex(graph someGraph, String key){
+vertex* getVertex(graph* someGraph, String key){
     int i;
     bool isFound = false;
     vertex* returnVal;
+    vertex* temp;
 
-    for (i = 0; i < someGraph.numVertices && !isFound; i++){
-        if (strcpy(someGraph.adjacencyList[i].name, key) == 0){
+    for (i = 0; i < someGraph->numVertices && !isFound; i++){
+        temp = &(someGraph->adjacencyList[i]);
+        //printf("Degree of current vertex: %d\n", getDegree(temp));
+        //printf("Comparing %s and %s. Result: %d\n", temp->name, key, caseInsensitiveStringCompare(someGraph->adjacencyList[i].name, key));
+        if (strcasecmp(temp->name, key) == 0){
             isFound = true;
-            returnVal = &(someGraph.adjacencyList[i]);
+            returnVal = &(someGraph->adjacencyList[i]);
         }
-
     }
 
     if (isFound)
@@ -112,8 +90,7 @@ vertex* getVertex(graph someGraph, String key){
     else return NULL;
 }
 
-//for debugging purposes
-//traverses the linked list per vertex
+/*
 int main(){
     FILE *fp = NULL;
     graph newGraph;
@@ -125,24 +102,5 @@ int main(){
 
     fclose(fp);
 
-    int i;
-
-    for (i = 0; i < newGraph.numVertices; i++){
-        vertex* temp = &(newGraph.adjacencyList[i]);
-        printf("Vertex %d:", i + 1);
-        while (temp->edge != NULL){
-            printf("%s ", temp->name);
-            temp = temp->edge;
-        }
-
-        printf("%s\n", temp->name);
-
-        printf("Degree of vertex %d: %d\n", i + 1, getDegree(&(newGraph.adjacencyList[i])));
-
-        printf("\n");
-    }
-
-
-
-    return 0;
-}
+    printf("Name of node: %s", getVertex(&newGraph, "DiaNa")->name);
+}*/
