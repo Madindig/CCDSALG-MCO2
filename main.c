@@ -10,11 +10,18 @@ int main(){
     FILE *fp = NULL;
     graph newGraph;
     int i;
+    char filename[100];
+    char start[100];
 
-    fp = fopen("Example1.txt", "r");
+    printf("Filename: ");
+    scanf("%s", filename);
 
+    printf("Input start vertex for the traversal: ");
+    scanf("%s", start);
+
+    fp = fopen(filename, "r");
     if (!fileToGraph(fp, &newGraph))
-        printf("The file does not exist.\n");
+        printf("%s not found.\n", filename);
 
     fclose(fp);
 
