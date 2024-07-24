@@ -34,12 +34,12 @@ int main(){
     printf("\n");
 
     printf("BFS traversal: ");
-    printBFS(&newGraph, "A");
+    printBFS(&newGraph, start);
     resetVisitStatus(&newGraph);
     printf("\n");
     printf("\n");
     printf("DFS traversal: ");
-    printDFS(&newGraph, "A");
+    printDFS(&newGraph, start);
 
     /*
     vertex* temp;
