@@ -39,7 +39,7 @@ vertex* getSmallestAdjacent(graph* someGraph, String key){
     return getVertex(someGraph, lowestName); //uses temp to get pointer to linked list where the adjacent vertex is the head
 }
 
-bool printDFS(graph* someGraph, String key){
+bool printDFS(FILE* fp, graph* someGraph, String key){
     vertex* currentNode = getVertex(someGraph, key);
     int numVisited = 0;
     StackNode stack;
@@ -50,13 +50,13 @@ bool printDFS(graph* someGraph, String key){
         return false;
 
     //printf("Num of Vertices: %d\n", someGraph->numVertices);
-
+    
     while (numVisited < someGraph->numVertices){
         if (!currentNode->hasBeenVisited){
             markAsVisited(someGraph, currentNode->name);
             numVisited++;
             PushNode(&stack, currentNode);
-            printf("%s ", currentNode->name);
+            fprintf(fp, "%s ", currentNode->name);
         }
 
         if (getSmallestAdjacent(someGraph, currentNode->name) != NULL){
@@ -72,7 +72,7 @@ bool printDFS(graph* someGraph, String key){
     return true;
 }
 
-bool printBFS(graph* someGraph, String key){
+bool printBFS(FILE* fp, graph* someGraph, String key){
     vertex* currentNode = getVertex(someGraph, key);
     int numVisited = 0;
     QueueNode queue;
@@ -87,7 +87,7 @@ bool printBFS(graph* someGraph, String key){
     while (numVisited < someGraph->numVertices){
         currentNode = DequeueNode(&queue);
         numVisited++;
-        printf("%s ", currentNode->name);
+        fprintf(fp, "%s ", currentNode->name);
 
         while (getSmallestAdjacent(someGraph, currentNode->name) != NULL){
             EnqueueNode(&queue, getSmallestAdjacent(someGraph, currentNode->name));

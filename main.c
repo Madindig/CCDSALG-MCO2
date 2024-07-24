@@ -27,19 +27,22 @@ int main(){
 
     printf("\n");
 
+    
+
+    printf("\n");
+
+    fp = fopen("TRAVERSALS.txt", "w+");
     for (i = 0; i < newGraph.numVertices; i++){
-        printf("%s %d\n", newGraph.adjacencyList[i].name, getDegree(&(newGraph.adjacencyList[i])));
+        fprintf(fp, "%s %d\n", newGraph.adjacencyList[i].name, getDegree(&(newGraph.adjacencyList[i])));
     }
-
-    printf("\n");
-
-    printf("BFS traversal: ");
-    printBFS(&newGraph, start);
+    fprintf(fp, "\n");
+    printBFS(fp, &newGraph, start);
     resetVisitStatus(&newGraph);
-    printf("\n");
-    printf("\n");
-    printf("DFS traversal: ");
-    printDFS(&newGraph, start);
+    fprintf(fp, "\n");
+    fprintf(fp, "\n");
+    printDFS(fp, &newGraph, start);
+    fprintf(fp, "\n");
+    fclose(fp);
 
     /*
     vertex* temp;
