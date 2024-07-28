@@ -7,12 +7,6 @@ F 2
 G 4
 H 3
 
-<<<<<<< HEAD
 F G H C E A B D 
 
 F G C B A E D H 
-=======
-A B E H C D G F 
-
-A B C G E D F H 
->>>>>>> 5b3e3e21647bd050628fb5c5e042635d7c0fe311
