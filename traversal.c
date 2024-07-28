@@ -78,7 +78,7 @@ bool printDFS(FILE* fp, graph* someGraph, String key){
         return false;
 
     //printf("Num of Vertices: %d\n", someGraph->numVertices);
-
+    
     while (numVisited < someGraph->numVertices){
         if (!currentNode->hasBeenVisited){
             markAsVisited(someGraph, currentNode->name, currentNode->idNum);
