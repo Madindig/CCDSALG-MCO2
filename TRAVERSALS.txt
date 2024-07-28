@@ -7,6 +7,6 @@ F 2
 G 4
 H 3
 
-F G H C E A B D 
+B A C E H G D F 
 
-F G C B A E D H 
+B A E D G C F H 

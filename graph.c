@@ -21,6 +21,24 @@ vertex* createVertex(vertex* node, String name){
     return node->edge;
 }
 
+bool caseInsensitiveStringCompare(String one, String two){
+    int i;
+    int len1 = (int)strlen(one);
+    int len2 = (int)strlen(two);
+    String copyOfOne = "";
+    String copyOfTwo = "";
+
+    for (i = 0; i < len1; i++){
+        copyOfOne[i] = toupper(one[i]);
+    }
+
+    for (i = 0; i < len2; i++){
+        copyOfTwo[i] = toupper(two[i]);
+    }
+
+    return (bool)(strcmp(copyOfOne, copyOfTwo) == 0);
+}
+
 //key is the name of the vertex
 //returns the first vertex with a similar name
 vertex* getVertex(graph* someGraph, String key){
@@ -33,7 +51,7 @@ vertex* getVertex(graph* someGraph, String key){
         temp = &(someGraph->adjacencyList[i]);
         //printf("Degree of current vertex: %d\n", getDegree(temp));
         //printf("Comparing %s and %s. Result: %d\n", temp->name, key, caseInsensitiveStringCompare(someGraph->adjacencyList[i].name, key));
-        if (strcasecmp(temp->name, key) == 0){
+        if (caseInsensitiveStringCompare(temp->name, key)){
             isFound = true;
             returnVal = &(someGraph->adjacencyList[i]);
         }
