@@ -116,7 +116,7 @@ void addIDNum(graph* newGraph){
                 if (temp == NULL && !doneAssigning){ //happens when there are similar vertices (i.e. similar name); you can not find the current vertex's name because it is not adjacent to this similar vertex
                     hasFailedToAssign++; //start checking from the next linked list head
                     index = (hasFailedToAssign - basePtr) / sizeof(vertex); //to avoid index out of bounds
-                    while (index < newGraph->numVertices && strcmp(nameOfThisAdjacentNode, hasFailedToAssign->name) != 0){
+                    while ((index < newGraph->numVertices && strcmp(nameOfThisAdjacentNode, hasFailedToAssign->name) != 0) || hasFailedToAssign == &(newGraph->adjacencyList[i])){
                         hasFailedToAssign++;
                         index = (hasFailedToAssign - basePtr) / sizeof(vertex);
                     }

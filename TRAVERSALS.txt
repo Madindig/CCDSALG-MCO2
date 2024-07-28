@@ -1,8 +1,8 @@
-Bruce 1
-Clark 2
-Diana 3
-Hal 2
+A 1
+A 3
+A 1
+A 1
 
-Diana Bruce Clark Hal 
+A A A A 
 
-Diana Bruce Clark Hal 
+A A A A 
