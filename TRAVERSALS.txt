@@ -1,12 +1,8 @@
-A 3
-B 2
-C 2
-D 1
-E 3
-F 2
-G 4
-H 3
+Bruce 1
+Clark 2
+Diana 3
+Hal 2
 
-B A C E H G D F 
+Diana Bruce Clark Hal 
 
-B A E D G C F H 
+Diana Bruce Clark Hal 

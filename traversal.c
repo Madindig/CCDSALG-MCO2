@@ -12,7 +12,7 @@ vertex* getVertexIDSensitive(graph* someGraph, String key, int idNum){
         temp = &(someGraph->adjacencyList[i]);
         //printf("Degree of current vertex: %d\n", getDegree(temp));
         //printf("Comparing %s and %s. Result: %d\n", temp->name, key, caseInsensitiveStringCompare(someGraph->adjacencyList[i].name, key));
-        if (caseInsensitiveStringCompare(temp->name, key) == 0 && temp->idNum == idNum){
+        if (caseInsensitiveStringCompare(temp->name, key) && temp->idNum == idNum){
             isFound = true;
             returnVal = &(someGraph->adjacencyList[i]);
         }
