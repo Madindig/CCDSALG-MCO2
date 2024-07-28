@@ -8,6 +8,7 @@ typedef char String[256];
 
 typedef struct vertex{
     String name;
+    int idNum;
     struct vertex* edge;
     bool hasBeenVisited;
 } vertex;

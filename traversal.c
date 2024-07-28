@@ -1,6 +1,30 @@
 #include "queue.c"
 
-void markAsVisited(graph* someGraph, String key){
+//key is the name of the vertex
+//returns the first vertex with a similar name
+vertex* getVertexIDSensitive(graph* someGraph, String key, int idNum){
+    int i;
+    bool isFound = false;
+    vertex* returnVal;
+    vertex* temp;
+
+    for (i = 0; i < someGraph->numVertices && !isFound; i++){
+        temp = &(someGraph->adjacencyList[i]);
+        //printf("Degree of current vertex: %d\n", getDegree(temp));
+        //printf("Comparing %s and %s. Result: %d\n", temp->name, key, caseInsensitiveStringCompare(someGraph->adjacencyList[i].name, key));
+        if (strcasecmp(temp->name, key) == 0 && temp->idNum == idNum){
+            isFound = true;
+            returnVal = &(someGraph->adjacencyList[i]);
+        }
+    }
+
+    if (isFound)
+        return returnVal;
+
+    else return NULL;
+}
+
+void markAsVisited(graph* someGraph, String key, int idNum){
     int i;
     vertex* temp;
 
@@ -8,7 +32,7 @@ void markAsVisited(graph* someGraph, String key){
         temp = &(someGraph->adjacencyList[i]);
 
         while (temp != NULL){
-            if (strcmp(temp->name, key) == 0)
+            if (strcmp(temp->name, key) == 0 && temp->idNum == idNum)
                 temp->hasBeenVisited = true;
 
             temp = temp->edge;
@@ -17,29 +41,33 @@ void markAsVisited(graph* someGraph, String key){
 }
 
 //returns smallest adjacent vertex from the graph
-vertex* getSmallestAdjacent(graph* someGraph, String key){
+vertex* getSmallestAdjacent(graph* someGraph, String key, int idNum){
     //printf("Checking for node %s\n", key);
-    vertex* currentVertex = getVertex(someGraph, key)->edge;
+    vertex* currentVertex = getVertexIDSensitive(someGraph, key, idNum)->edge;
     String lowestName = "";
-    bool doneAssigningName = false;
+    int lowestID;
+    bool doneAssigningNameAndLowestID = false;
 
     while (currentVertex != NULL){
-        if (!currentVertex->hasBeenVisited && !doneAssigningName){
+        if (!currentVertex->hasBeenVisited && !doneAssigningNameAndLowestID){
             strcpy(lowestName, currentVertex->name);
-            doneAssigningName = true;
+            lowestID = currentVertex->idNum;
+            doneAssigningNameAndLowestID = true;
         }
 
-        else if (!currentVertex->hasBeenVisited && strcmp(currentVertex->name, lowestName) <= 0)
+        else if (!currentVertex->hasBeenVisited && strcmp(currentVertex->name, lowestName) <= 0 && currentVertex->idNum < lowestID){
             strcpy(lowestName, currentVertex->name);
+            lowestID = currentVertex->idNum;
+        }
 
         currentVertex = currentVertex->edge;
        //printf("Lowest Name: %s\n", lowestName);
     }
 
-    return getVertex(someGraph, lowestName); //uses temp to get pointer to linked list where the adjacent vertex is the head
+    return getVertexIDSensitive(someGraph, lowestName, lowestID); //uses temp to get pointer to linked list where the adjacent vertex is the head
 }
 
-bool printDFS(graph* someGraph, String key){
+bool printDFS(FILE* fp, graph* someGraph, String key){
     vertex* currentNode = getVertex(someGraph, key);
     int numVisited = 0;
     StackNode stack;
@@ -53,14 +81,14 @@ bool printDFS(graph* someGraph, String key){
 
     while (numVisited < someGraph->numVertices){
         if (!currentNode->hasBeenVisited){
-            markAsVisited(someGraph, currentNode->name);
+            markAsVisited(someGraph, currentNode->name, currentNode->idNum);
             numVisited++;
             PushNode(&stack, currentNode);
-            printf("%s ", currentNode->name);
+            fprintf(fp, "%s ", currentNode->name);
         }
 
-        if (getSmallestAdjacent(someGraph, currentNode->name) != NULL){
-            currentNode = getSmallestAdjacent(someGraph, currentNode->name);
+        if (getSmallestAdjacent(someGraph, currentNode->name, currentNode->idNum) != NULL){
+            currentNode = getSmallestAdjacent(someGraph, currentNode->name, currentNode->idNum);
         } //There is an adjacent vertex yet to be visited
 
         else {
@@ -72,7 +100,7 @@ bool printDFS(graph* someGraph, String key){
     return true;
 }
 
-bool printBFS(graph* someGraph, String key){
+bool printBFS(FILE* fp, graph* someGraph, String key){
     vertex* currentNode = getVertex(someGraph, key);
     int numVisited = 0;
     QueueNode queue;
@@ -83,17 +111,17 @@ bool printBFS(graph* someGraph, String key){
         return false;
 
     EnqueueNode(&queue, currentNode);
-    markAsVisited(someGraph, QueueTailNode(&queue)->name);
+    markAsVisited(someGraph, QueueTailNode(&queue)->name, QueueTailNode(&queue)->idNum);
     while (numVisited < someGraph->numVertices){
         currentNode = DequeueNode(&queue);
         numVisited++;
-        printf("%s ", currentNode->name);
+        fprintf(fp, "%s ", currentNode->name);
 
-        while (getSmallestAdjacent(someGraph, currentNode->name) != NULL){
-            EnqueueNode(&queue, getSmallestAdjacent(someGraph, currentNode->name));
+        while (getSmallestAdjacent(someGraph, currentNode->name, currentNode->idNum) != NULL){
+            EnqueueNode(&queue, getSmallestAdjacent(someGraph, currentNode->name, currentNode->idNum));
             //printf("Name of Enqueued: %s\n", getSmallestAdjacent(someGraph, currentNode->name)->name);
             //printf("Name of tail: %s\n", QueueTailNode(someGraph)->name);
-            markAsVisited(someGraph, QueueTailNode(&queue)->name);
+            markAsVisited(someGraph, QueueTailNode(&queue)->name, QueueTailNode(&queue)->idNum);
         }
     }
 
